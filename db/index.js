@@ -1,4 +1,4 @@
-// const send = require('./correo');
+const send = require('../correo');
 require('dotenv').config()
 const { Pool } = require("pg");
 const pool = new Pool({
@@ -16,7 +16,7 @@ async function nuevoUsuario(email, name, password){
             VALUES ('${email}', '${name}', '${password}', false) RETURNING *` 
         );
         const usuario = result.rows[0];
-        // send(usuario, false, true);
+        await send(usuario, false, true);
         return usuario;
     } catch (error) {
         console.log(error);
