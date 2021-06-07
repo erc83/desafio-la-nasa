@@ -7,7 +7,7 @@ const secretKey = "Shhh"
 const expressFileUpload = require("express-fileupload");
 
 //server
-app.set("port", process.env.PORT || 5001);
+app.set("port", process.env.PORT || 5003);
 const PORT = app.get("port");
 app.listen(PORT, () => {
     console.log("server on port:", PORT);
@@ -47,6 +47,18 @@ app.post("/usuarios", async (req, res) => {
     const usuario = await db.nuevoUsuario(email, name, password);
     res.status(201).send(JSON.stringify(usuario));
 })
+
+app.get("/admin" , async (req, res) => {
+    const usuarios = await db.getUsuarios();
+    res.render("Admin", {usuarios});
+});
+
+app.put("/usuarios", async (req,res) => {
+    const { id, auth } = req.body;
+    const usuario = await db.setUsuarioStatus(id, auth);
+    res.status(200).send(JSON.stringify(usuario));
+})
+
 
 
 app.get("*", (req, res) => {

@@ -24,5 +24,33 @@ async function nuevoUsuario(email, name, password){
     }
 }
 
-module.exports = {nuevoUsuario}
+async function getUsuarios() {
+    try {
+        const result = await pool.query('SELECT * FROM usuarios');
+        return result.rows;
+    } catch (error) {
+        console.log(error);
+        return error;
+    }
+}
+
+async function setUsuarioStatus(id, auth) {
+    try {
+        const result = await pool.query(
+            `UPDATE usuarios SET auth = ${auth} WHERE id = ${id} RETURNING *`
+        );
+        const usuario = result.rows[0];
+        // send(usuario, auth);
+        return usuario;
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+}
+
+module.exports = {
+    nuevoUsuario,
+    getUsuarios,
+    setUsuarioStatus
+}
 
