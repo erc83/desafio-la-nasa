@@ -1,0 +1,54 @@
+<div class="w-50 m-auto">
+  <h2>👽 Bienvenido a LA NASA 👽</h2>
+  <div class="row my-5 border rounded p-5">
+      <h6 class="text-center mb-5 col-12">Registrese para poder pasar a evaluación</h6>
+      <div class="col col-4">Email:</div>
+      <div class="col col-8"><input type="text" class="form-control" id="email"></div>
+      <div class="col col-4">Nombre:</div>
+      <div class="col col-8"><input type="text" class="form-control" id="name"></div>
+      <div class="col col-4">Contraseña:</div>
+      <div class="col col-8"><input type="password" class="form-control" id="password"></div>
+      <div class="col-12 mt-5">
+          <button class="btn  bg-light rounded text-success m-auto">Registrarme</button>
+      </div>
+  </div>
+</div>
+
+<script>
+    let button = document.getElementsByTagName('button')[0]
+    button.addEventListener("click", () => {
+        const email = document.getElementById("email").value
+        const name = document.getElementById("name").value
+        const password = document.getElementById("password").value
+        fetch("http://localhost:5001/usuarios", {
+            method: "POST",
+            body: JSON.stringify({ email, name, password }),
+            headers: {
+                'content-Type': 'application/json'
+            },
+        }).then(res => res.json()).then(data => {
+            alert("Usuario registrado con éxito")
+            location.href = "http://localhost:5001"
+        }).catch(e => console.log(e))
+    })
+
+</script>
+
+
+<style>
+  body {
+    background: black;
+    color: white;
+    text-align: center;
+    padding: 50px;
+  }
+  td,
+  th {
+    color: white;
+  }
+  .col {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+</style>
