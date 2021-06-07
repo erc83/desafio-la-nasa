@@ -91,6 +91,33 @@ app.post("/verify", async function  (req, res) {
     }
 });
 
+app.get("/evidencias", function (req, res) {
+    let { token } = req.query;
+    jwt.verify(token, process.env.SECRET_KEY, (err, decoded) => {
+        err
+          ? res.status(401).send(
+              res.send({
+                  error: "401 Unauthorized",
+                  message: "Usted no está autorizado para estar aquí",
+                  token_error: err.message,
+              })
+          )
+          : res.render("Evidencias", { nombre: decoded.data.nombre });
+    });
+});
+
+app.post("/upload", (req, res) => {
+    if(Object.keys(req.files).length == 0) {
+        return res.status(400).send("No files were uploaded.");
+    }
+    let foto = req.files.foto;
+    let name = foto.name;
+    foto.mv(path.join(__dirname, "public/upload", name), (err) => {
+        if(err) throw err;
+        res.send("Foto cargada con éxito, revisa la carpeta Upload");
+    });
+});
+
 
 
 app.get("*", (req, res) => {
