@@ -1,0 +1,61 @@
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+<div class="w-50 m-auto">
+  <h2>&#128372; Ingresar &#128372;</h2>
+  <div class="row my-5 border rounded p-5">
+    <div class="col col-4">Email:</div>
+    <div class="col col-8">
+      <input type="text" class="form-control" id="email" />
+    </div>
+
+    <div class="col col-4">Contraseña:</div>
+    <div class="col col-8">
+      <input type="password" class="form-control" id="password" />
+    </div>
+
+    <div class="col-12 mt-2">
+      <button onclick="verificacion()" class="bg-light m-auto btn">
+        Ingresar
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+    function verificacion() {
+        let email = document.getElementById('email').value
+        let password = document.getElementById('password').value
+        let payload = { email, password }
+        axios.post('/verify', payload).then(data => {
+            const token = data.data
+            alert(`Autenticado con éxito! Serás redirigido a 
+                Evidencias para que cargues tus fotos, 
+                tu token esta en SessionStorage`)
+            sessionStorage.setItem('token', JSON.stringify(token))
+            window.location.href = `/evidencias?token=${token}`
+
+        }).catch(({ response }) => alert(response.data.error))
+    }
+</script>
+
+
+    <style>
+      body {
+        background: black;
+        color: white;
+        text-align: center;
+        padding: 50px;
+      }
+
+      td,
+      th {
+        color: white;
+      }
+      .col {
+        display: flex;
+        align-items: center;
+        margin-bottom: 10px;
+      }
+    </style>
+  </div>
+</div>

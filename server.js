@@ -1,9 +1,10 @@
+require('dotenv').config();
 const express = require("express");
 const app = express();
 const path = require("path");
 const exphbs = require("express-handlebars")
 const db = require("./db/index");
-const secretKey = "Shhh"
+const jwt = require("jsonwebtoken");
 const expressFileUpload = require("express-fileupload");
 
 //server
@@ -58,6 +59,37 @@ app.put("/usuarios", async (req,res) => {
     const usuario = await db.setUsuarioStatus(id, auth);
     res.status(200).send(JSON.stringify(usuario));
 })
+
+app.get("/login", function (req, res){
+    res.render("Login");
+})
+
+app.post("/verify", async function  (req, res) {
+    let { email, password } = req.body;
+    let user = await db.getUsuario(email, password);
+    if(user) {
+        if(user.auth) {
+            const token = jwt.sign(
+                {
+                    exp: Math.floor(Date.now() / 1000) + 180,
+                    data: user,
+                },
+                process.env.SECRET_KEY
+            );
+            res.send(token);
+        }else{
+            res.status(401).send({
+                error: "Este usuario aún no esta validado para subir imagenes",
+                code: 404,
+            });
+        }
+    }else{
+        res.status(404).send({
+            error: "Este usuario no está registrado en la base de datos",
+            code: 404,
+        });
+    }
+});
 
 
 

@@ -48,9 +48,24 @@ async function setUsuarioStatus(id, auth) {
     }
 }
 
+async function getUsuario(email, password) {
+    try {
+        const result = await pool.query(
+            `SELECT * FROM usuarios WHERE email = '${email}' 
+            AND password = '${password}'`
+        );
+        return result.rows[0];
+    } catch (e) {
+        console.log(e);
+        return false;
+    }
+}
+
+
 module.exports = {
     nuevoUsuario,
     getUsuarios,
-    setUsuarioStatus
+    setUsuarioStatus,
+    getUsuario
 }
 
